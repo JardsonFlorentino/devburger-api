@@ -4,7 +4,8 @@
   "description": "DevBurguer API",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "start": "node src/server.js"
   },
   "author": "Jardson Florentino",
   "url": "https://github.com/jardsonflorentino",
