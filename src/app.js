@@ -9,7 +9,26 @@ class App {
   constructor() {
     this.app = express()
 
-    this.app.use(cors())
+    const allowedOrigins = [
+      'https://devburger-interface-green.vercel.app',
+      'http://localhost:3001',
+      'http://localhost:5173',
+    ]
+
+    this.app.use(
+      cors({
+        origin: function (origin, callback) {
+          if (!origin) return callback(null, true)
+          if (allowedOrigins.includes(origin)) {
+            return callback(null, true)
+          } else {
+            return callback(new Error('Not allowed by CORS'))
+          }
+        },
+        credentials: true,
+      })
+    )
+
     this.middlewares()
     this.routes()
   }
@@ -30,4 +49,5 @@ class App {
     this.app.use(routes)
   }
 }
+
 export default new App().app
