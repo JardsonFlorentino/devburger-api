@@ -11,6 +11,7 @@ class App {
 
     const allowedOrigins = [
       'https://devburger-interface-green.vercel.app',
+      'https://devburgerr.netlify.app',
       'http://localhost:3001',
       'http://localhost:5173',
     ]
