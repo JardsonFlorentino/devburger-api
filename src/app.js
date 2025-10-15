@@ -15,6 +15,17 @@ class App {
       'http://localhost:5173',
     ]
 
+    this.app.use(express.json())
+
+    this.app.use(
+      '/product-file',
+      express.static(resolve(__dirname, '..', 'uploads'))
+    )
+    this.app.use(
+      '/category-file',
+      express.static(resolve(__dirname, '..', 'uploads'))
+    )
+
     this.app.use(
       cors({
         origin: function (origin, callback) {
@@ -26,23 +37,13 @@ class App {
           }
         },
         credentials: true,
+        optionsSuccessStatus: 200,
       })
     )
 
-    this.middlewares()
-    this.routes()
-  }
+    this.app.options('*', cors())
 
-  middlewares() {
-    this.app.use(express.json())
-    this.app.use(
-      '/product-file',
-      express.static(resolve(__dirname, '..', 'uploads'))
-    )
-    this.app.use(
-      '/category-file',
-      express.static(resolve(__dirname, '..', 'uploads'))
-    )
+    this.routes()
   }
 
   routes() {
