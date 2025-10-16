@@ -17,8 +17,8 @@ Backend da aplicação DevBurger desenvolvido em Node.js com Express e Sequelize
 - Sequelize
 - JWT para autenticação
 
-  ## 🔗 Repositório Frontend
-- **Frontend**: https://github.com/JardsonFlorentino/devburger-interface
+  ## 🔗 Repositório Front-End
+- **Front-End**: https://github.com/JardsonFlorentino/devburger-interface
 
 ## 📦 Como usar
 ```bash
