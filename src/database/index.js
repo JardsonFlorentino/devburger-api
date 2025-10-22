@@ -1,11 +1,11 @@
 import { Sequelize } from 'sequelize'
 import mongoose from 'mongoose'
 
-import configDataBase from '../config/database'
+import configDataBase from '../config/database.js'
 
-import User from '../app/models/User'
-import Product from '../app/models/Product'
-import Category from '../app/models/Category'
+import User from '../app/models/User.js'
+import Product from '../app/models/Product.js'
+import Category from '../app/models/Category.js'
 
 const models = [User, Product, Category]
 
@@ -25,9 +25,7 @@ class DataBase {
   }
 
   mongo() {
-    this.mongoConnection = mongoose.connect(
-      'mongodb://localhost:27017/devburguer'
-    )
+    this.mongoConnection = mongoose.connect(process.env.MONGO_URL)
   }
 }
 

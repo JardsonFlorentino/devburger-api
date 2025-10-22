@@ -1,10 +1,11 @@
 {
   "name": "devburguer-api",
   "version": "1.0.0",
+  "type": "module",
   "description": "DevBurguer API",
   "main": "src/server.js",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "node --watch src/server.js",
     "start": "node src/server.js"
   },
   "author": "Jardson Florentino",
