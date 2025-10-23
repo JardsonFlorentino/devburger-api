@@ -13,12 +13,14 @@ class App {
   constructor() {
     this.app = express()
 
+   
     const allowedOrigins = process.env.CORS_ORIGINS.split(',')
 
+   
     this.app.use(
       cors({
         origin(origin, callback) {
-          if (!origin) return callback(null, true)
+          if (!origin) return callback(null, true) 
           if (allowedOrigins.includes(origin)) {
             return callback(null, true)
           }
@@ -29,8 +31,12 @@ class App {
       })
     )
 
+    
+    this.app.options('*', cors())
+
     this.app.use(express.json())
 
+    
     this.app.use(
       '/product-file',
       express.static(resolve(__dirname, '..', 'uploads'))
