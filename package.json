@@ -1,7 +1,6 @@
 {
   "name": "devburguer-api",
   "version": "1.0.0",
-  "type": "module",
   "description": "DevBurguer API",
   "main": "src/server.js",
   "scripts": {
@@ -9,7 +8,7 @@
     "start": "node src/server.js"
   },
   "author": "Jardson Florentino",
-  "url": "https://github.com/jardsonflorentino",
+  "url": "https://github.com/JardsonFlorentino",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
