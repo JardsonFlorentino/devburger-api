@@ -13,7 +13,7 @@ class App {
   constructor() {
     this.app = express()
 
-    const allowedOrigins = ['http://localhost:3001', 'http://localhost:5173']
+    const allowedOrigins = process.env.CORS_ORIGINS
 
     this.app.use(
       cors({
