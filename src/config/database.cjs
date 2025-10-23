@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   dialect: process.env.DB_DIALECT,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
