@@ -1,6 +1,7 @@
 {
   "name": "devburguer-api",
   "version": "1.0.0",
+  "type": "module",
   "description": "DevBurguer API",
   "main": "src/server.js",
   "scripts": {
