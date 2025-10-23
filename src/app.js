@@ -13,7 +13,7 @@ class App {
   constructor() {
     this.app = express()
 
-    const allowedOrigins = process.env.CORS_ORIGINS
+    const allowedOrigins = process.env.CORS_ORIGINS.split(',')
 
     this.app.use(
       cors({
