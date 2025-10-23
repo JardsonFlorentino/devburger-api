@@ -13,24 +13,21 @@ class App {
   constructor() {
     this.app = express()
 
-    // 🔹 Captura a variável CORS_ORIGINS do .env (pode conter vários domínios separados por vírgula)
+    // Captura os domínios autorizados do .env
     const allowedOrigins = process.env.CORS_ORIGINS
       ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
-      : ['*'] // se não tiver definida, libera tudo temporariamente
+      : ['*']
 
-    // 🔹 Middleware CORS
+    // Configuração do CORS
     this.app.use(
       cors({
         origin(origin, callback) {
-          // Libera requisições sem origem (ex: Postman)
-          if (!origin) return callback(null, true)
+          if (!origin) return callback(null, true) // permite Postman e similares
 
-          // Libera todos os domínios se '*' estiver configurado
           if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
             return callback(null, true)
           }
 
-          // Caso contrário, bloqueia
           return callback(new Error(`Not allowed by CORS: ${origin}`))
         },
         credentials: true,
@@ -38,10 +35,10 @@ class App {
       })
     )
 
-    // 🔹 Permite JSON no body das requisições
+    // Permitir JSON
     this.app.use(express.json())
 
-    // 🔹 Servir arquivos estáticos (imagens, uploads, etc.)
+    // Servir arquivos estáticos
     this.app.use(
       '/product-file',
       express.static(resolve(__dirname, '..', 'uploads'))
@@ -52,7 +49,7 @@ class App {
       express.static(resolve(__dirname, '..', 'uploads'))
     )
 
-    // 🔹 Registra as rotas
+    // Rotas
     this.routes()
   }
 
