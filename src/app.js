@@ -13,39 +13,46 @@ class App {
   constructor() {
     this.app = express()
 
-   
-    const allowedOrigins = process.env.CORS_ORIGINS.split(',')
+    // 🔹 Captura a variável CORS_ORIGINS do .env (pode conter vários domínios separados por vírgula)
+    const allowedOrigins = process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+      : ['*'] // se não tiver definida, libera tudo temporariamente
 
-   
+    // 🔹 Middleware CORS
     this.app.use(
       cors({
         origin(origin, callback) {
-          if (!origin) return callback(null, true) 
-          if (allowedOrigins.includes(origin)) {
+          // Libera requisições sem origem (ex: Postman)
+          if (!origin) return callback(null, true)
+
+          // Libera todos os domínios se '*' estiver configurado
+          if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
             return callback(null, true)
           }
-          return callback(new Error('Not allowed by CORS'))
+
+          // Caso contrário, bloqueia
+          return callback(new Error(`Not allowed by CORS: ${origin}`))
         },
         credentials: true,
         optionsSuccessStatus: 200,
       })
     )
 
-    
-    this.app.options('*', cors())
-
+    // 🔹 Permite JSON no body das requisições
     this.app.use(express.json())
 
-    
+    // 🔹 Servir arquivos estáticos (imagens, uploads, etc.)
     this.app.use(
       '/product-file',
       express.static(resolve(__dirname, '..', 'uploads'))
     )
+
     this.app.use(
       '/category-file',
       express.static(resolve(__dirname, '..', 'uploads'))
     )
 
+    // 🔹 Registra as rotas
     this.routes()
   }
 
