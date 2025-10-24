@@ -13,33 +13,43 @@ class App {
   constructor() {
     this.app = express()
 
-    const allowedOrigins = process.env.CORS_ORIGINS.split(',')
+    // Captura os domínios autorizados do .env
+    const allowedOrigins = process.env.CORS_ORIGINS
+      ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
+      : ['*']
 
+    // Configuração do CORS
     this.app.use(
       cors({
         origin(origin, callback) {
-          if (!origin) return callback(null, true)
-          if (allowedOrigins.includes(origin)) {
+          if (!origin) return callback(null, true) // permite Postman e similares
+
+          if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
             return callback(null, true)
           }
-          return callback(new Error('Not allowed by CORS'))
+
+          return callback(new Error(`Not allowed by CORS: ${origin}`))
         },
         credentials: true,
         optionsSuccessStatus: 200,
       })
     )
 
+    // Permitir JSON
     this.app.use(express.json())
 
+    // Servir arquivos estáticos
     this.app.use(
       '/product-file',
       express.static(resolve(__dirname, '..', 'uploads'))
     )
+
     this.app.use(
       '/category-file',
       express.static(resolve(__dirname, '..', 'uploads'))
     )
 
+    // Rotas
     this.routes()
   }
 
