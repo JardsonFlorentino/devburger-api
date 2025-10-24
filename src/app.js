@@ -31,7 +31,6 @@ class App {
 
     this.app.use(express.json())
 
-    // rotas e arquivos estáticos
     this.app.use(
       '/product-file',
       express.static(resolve(__dirname, '..', 'uploads'))
