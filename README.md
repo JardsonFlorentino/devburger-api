@@ -29,7 +29,7 @@ yarn dev
 ```
 
 ## 🌐 Aplicação Online
-https://devburger-interface-green.vercel.app
+https://burger.jardsonflorentino.com.br/
 
 ## 🙋‍♂️ Autor
 
