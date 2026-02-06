@@ -14,16 +14,19 @@ Order.init(
         allowNull: false,
       },
     },
-    products: DataTypes.JSON, // Array vira JSON
+    products: DataTypes.JSON, // Array como JSON
     status: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
-    sequelize: null, // ← Será preenchido depois
+    sequelize: null,
     modelName: 'Order',
     tableName: 'Orders',
     timestamps: true,
   }
 )
+
+// ✅ DEFAULT EXPORT pro Controller
+export default Order
