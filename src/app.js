@@ -4,7 +4,6 @@ import path, { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import cors from 'cors'
 import 'dotenv/config'
-import './database/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -22,17 +21,14 @@ class App {
     this.app.use(
       cors({
         origin(origin, callback) {
-          // Permite requisições sem origem (Postman, curl, etc.)
           if (!origin) {
             return callback(null, true)
           }
 
-          // Se tiver '*' ou se a origem estiver na lista, permite
           if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
             return callback(null, true)
           }
 
-          // Rejeita caso contrário
           return callback(new Error(`Not allowed by CORS: ${origin}`), false)
         },
         credentials: true,
