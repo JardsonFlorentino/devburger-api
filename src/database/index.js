@@ -16,32 +16,45 @@ class Database {
         dialectOptions: {
           ssl: { require: true, rejectUnauthorized: false },
         },
-        logging: false, // Desliga logs SQL
+        logging: false,
       })
 
       await this.connection.authenticate()
       console.log('✅ Conexão OK')
 
-      // ✅ ORDEM CORRETA: Category ANTES de Product
-      const models = [User, Category, Product] // Category primeiro!
+      // 1. Init models (ordem importa!)
+      User.init(this.connection)
+      Category.init(this.connection) // Antes de Product!
+      Product.init(this.connection)
 
-      models.forEach((model) => model.init(this.connection))
-      models.forEach((model) => model.associate?.(this.connection.models))
+      // 2. Sync INDIVIDUAL na ordem
+      console.log('📦 Criando Users...')
+      await User.sync({ alter: true })
 
-      // Order factory
+      console.log('📦 Criando Categories...')
+      await Category.sync({ alter: true })
+
+      console.log('📦 Criando Products...')
+      await Product.sync({ alter: true })
+
+      // 3. Associações
+      User.associate?.(this.connection.models)
+      Category.associate?.(this.connection.models)
+      Product.associate?.(this.connection.models)
+
+      // 4. Order factory
+      console.log('📦 Criando Orders...')
       const Order = OrderFactory(this.connection)
+      await Order.sync({ alter: true })
       if (Order.associate) {
         Order.associate(this.connection.models)
       }
 
-      // ✅ Sync na ordem correta
-      console.log('📦 Criando tabelas...')
-      await this.connection.sync({ force: false, alter: true })
-      console.log('✅ Tabelas OK!')
-
+      console.log('✅ Todas tabelas criadas!')
       console.log('🗄️ Banco pronto!')
     } catch (error) {
       console.error('❌ Erro:', error.message)
+      console.error(error)
     }
   }
 }
