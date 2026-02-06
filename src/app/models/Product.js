@@ -8,14 +8,6 @@ class Product extends Model {
         price: Sequelize.INTEGER,
         path: Sequelize.STRING,
         offer: Sequelize.BOOLEAN,
-        category_id: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'categories',
-            key: 'id',
-          }
-        },
         url: {
           type: Sequelize.VIRTUAL,
           get() {
@@ -25,9 +17,10 @@ class Product extends Model {
       },
       {
         sequelize,
+        tableName: 'products', // ✅ ADICIONE
+        timestamps: true,
       }
     )
-
     return this
   }
 

@@ -15,9 +15,10 @@ class Category extends Model {
       },
       {
         sequelize,
+        tableName: 'categories', // ✅ ADICIONE
+        timestamps: true,
       }
     )
-
     return this
   }
 }

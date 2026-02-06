@@ -13,6 +13,8 @@ class User extends Model {
       },
       {
         sequelize,
+        tableName: 'users', // ✅ ADICIONE
+        timestamps: true,
       }
     )
     this.addHook('beforeSave', async (user) => {
@@ -20,7 +22,6 @@ class User extends Model {
         user.password_hash = await bcrypt.hash(user.password, 10)
       }
     })
-
     return this
   }
 
