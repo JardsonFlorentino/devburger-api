@@ -1,23 +1,34 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes } from 'sequelize'
 
-export class Order extends Model {}
-
-Order.init(
-  {
-    user: {
-      id: DataTypes.STRING(50),
-      name: DataTypes.STRING(100),
+// ✅ FACTORY FUNCTION — recebe sequelize e SÓ ENTÃO cria o model
+export default (sequelize) => {
+  const Order = sequelize.define(
+    'Order',
+    {
+      userId: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      userName: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+      products: {
+        type: DataTypes.JSON,
+        allowNull: false,
+        defaultValue: [],
+      },
+      status: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        defaultValue: 'pending',
+      },
     },
-    products: DataTypes.JSON, // Array completo
-    status: DataTypes.STRING(20),
-  },
-  {
-    sequelize: null, // ← NULL até database passar
-    modelName: 'Order',
-    tableName: 'Orders',
-    timestamps: true,
-  }
-)
+    {
+      tableName: 'Orders',
+      timestamps: true,
+    }
+  )
 
-// Default export
-export default Order
+  return Order
+}
