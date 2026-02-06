@@ -5,28 +5,19 @@ export class Order extends Model {}
 Order.init(
   {
     user: {
-      id: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      id: DataTypes.STRING(50),
+      name: DataTypes.STRING(100),
     },
-    products: DataTypes.JSON, // Array como JSON
-    status: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+    products: DataTypes.JSON, // Array completo
+    status: DataTypes.STRING(20),
   },
   {
-    sequelize: null,
+    sequelize: null, // ← NULL até database passar
     modelName: 'Order',
     tableName: 'Orders',
     timestamps: true,
   }
 )
 
-// ✅ DEFAULT EXPORT pro Controller
+// Default export
 export default Order
