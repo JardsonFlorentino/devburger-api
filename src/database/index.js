@@ -16,30 +16,32 @@ class Database {
         dialectOptions: {
           ssl: { require: true, rejectUnauthorized: false },
         },
-        logging: false,
+        logging: console.log, // ✅ Ver SQL pra debug
       })
 
       await this.connection.authenticate()
       console.log('✅ Conexão OK')
 
-      // Models regulares
+      // 1. Models regulares
       const models = [User, Product, Category]
       models.forEach((model) => model.init(this.connection))
       models.forEach((model) => model.associate?.(this.connection.models))
 
-      // Order via factory
+      // 2. Order factory
       const Order = OrderFactory(this.connection)
       if (Order.associate) {
         Order.associate(this.connection.models)
       }
 
-      // ✅ CRIA AS TABELAS (só development/primeira vez)
-      await this.connection.sync({ alter: true })
-      console.log('📦 Tabelas criadas/atualizadas!')
+      // 3. ✅ CRIA TODAS AS TABELAS
+      console.log('📦 Criando tabelas...')
+      await this.connection.sync({ force: false, alter: true })
+      console.log('✅ Tabelas OK!')
 
-      console.log('🗄️ Tudo OK!')
+      console.log('🗄️ Banco pronto!')
     } catch (error) {
       console.error('❌ Erro:', error.message)
+      console.error(error)
     }
   }
 }
