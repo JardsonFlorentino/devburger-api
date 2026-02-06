@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize'
 
-class Order extends Model {}
+export class Order extends Model {}
 
 Order.init(
   {
@@ -14,45 +14,16 @@ Order.init(
         allowNull: false,
       },
     },
-    products: [
-      {
-        id: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-        },
-        name: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        price: {
-          type: DataTypes.DECIMAL(10, 2),
-          allowNull: false,
-        },
-        category: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        url: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        quantity: {
-          type: DataTypes.INTEGER,
-          allowNull: false,
-        },
-      },
-    ],
+    products: DataTypes.JSON, // Array vira JSON
     status: {
       type: DataTypes.STRING,
       allowNull: false,
     },
   },
   {
-    sequelize: null, // Vai ser passado depois no database/index.js
+    sequelize: null, // ← Será preenchido depois
     modelName: 'Order',
     tableName: 'Orders',
     timestamps: true,
   }
 )
-
-export default Order
