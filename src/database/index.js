@@ -22,19 +22,18 @@ class Database {
       await this.connection.authenticate()
       console.log('✅ Conexão OK')
 
-      // ✅ Cria Order via factory
+      // ✅ Models regulares (User, Product, Category)
+      const models = [User, Product, Category]
+      models.forEach((model) => model.init(this.connection))
+      models.forEach((model) => model.associate?.(this.connection.models))
+
+      // ✅ Order via factory (JÁ vem inicializado)
       const Order = OrderFactory(this.connection)
 
-      // ✅ Adiciona Order aos models
-      const models = [User, Product, Category, Order]
-
-      models.forEach((model) => {
-        if (model.init) model.init(this.connection)
-      })
-
-      models.forEach((model) => {
-        if (model.associate) model.associate(this.connection.models)
-      })
+      // ✅ Associação do Order (se tiver)
+      if (Order.associate) {
+        Order.associate(this.connection.models)
+      }
 
       console.log('🗄️ Tudo OK!')
     } catch (error) {
