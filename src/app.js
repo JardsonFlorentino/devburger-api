@@ -22,13 +22,18 @@ class App {
     this.app.use(
       cors({
         origin(origin, callback) {
-          if (!origin) return callback(null, true) // permite Postman e similares
+          // Permite requisições sem origem (Postman, curl, etc.)
+          if (!origin) {
+            return callback(null, true)
+          }
 
+          // Se tiver '*' ou se a origem estiver na lista, permite
           if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
             return callback(null, true)
           }
 
-          return callback(new Error(`Not allowed by CORS: ${origin}`))
+          // Rejeita caso contrário
+          return callback(new Error(`Not allowed by CORS: ${origin}`), false)
         },
         credentials: true,
         optionsSuccessStatus: 200,
