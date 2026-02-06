@@ -1,35 +1,35 @@
 import Sequelize, { Model } from 'sequelize'
+import bcrypt from 'bcrypt'
 
-class Product extends Model {
+class User extends Model {
   static init(sequelize) {
     super.init(
       {
         name: Sequelize.STRING,
-        price: Sequelize.INTEGER,
-        path: Sequelize.STRING,
-        offer: Sequelize.BOOLEAN,
-        url: {
-          type: Sequelize.VIRTUAL,
-          get() {
-            return `${process.env.APP_URL}/product-file/${this.path}`
-          },
-        },
+        email: Sequelize.STRING,
+        password: Sequelize.VIRTUAL,
+        password_hash: Sequelize.STRING,
+        admin: Sequelize.BOOLEAN,
       },
       {
         sequelize,
-        tableName: 'products', // ✅ ADICIONE
+        tableName: 'users',
         timestamps: true,
       }
     )
+
+    this.addHook('beforeSave', async (user) => {
+      if (user.password) {
+        user.password_hash = await bcrypt.hash(user.password, 10)
+      }
+    })
+
     return this
   }
 
-  static associate(models) {
-    this.belongsTo(models.Category, {
-      foreignKey: 'category_id',
-      as: 'category',
-    })
+  async checkPassword(password) {
+    return bcrypt.compare(password, this.password_hash)
   }
 }
 
-export default Product
+export default User
