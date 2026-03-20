@@ -104,7 +104,16 @@ class ProductController {
       ],
     })
 
-    return response.json(products)
+    const appUrl = process.env.APP_URL || ''
+    const safe = products.map((p) => {
+      const plain = p.get({ plain: true })
+      return {
+        ...plain,
+        url: plain.path ? `${appUrl}/product-file/${plain.path}` : `${appUrl}/assets/default.jpg`,
+      }
+    })
+
+    return response.json(safe)
   }
 }
 

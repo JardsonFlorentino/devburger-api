@@ -11,7 +11,11 @@ class Product extends Model {
         url: {
           type: Sequelize.VIRTUAL,
           get() {
-            return `${process.env.APP_URL}/product-file/${this.path}`
+            const appUrl = process.env.APP_URL || ''
+            if (!this.path) {
+              return `${appUrl}/assets/default.jpg`
+            }
+            return `${appUrl}/product-file/${this.path}`
           },
         },
       },

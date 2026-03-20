@@ -80,6 +80,9 @@ class App {
       express.static(resolve(__dirname, '..', 'uploads'))
     )
 
+    // Servir assets públicos (ex: /assets/xburguer.png)
+    this.app.use('/assets', express.static(resolve(__dirname, '..', 'uploads')))
+
     // Rotas
     this.routes()
 
