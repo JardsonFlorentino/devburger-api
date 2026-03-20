@@ -20,29 +20,34 @@ class UserContoller {
 
     const { name, email, password, admin } = request.body
 
-    const userExists = await User.findOne({
-      where: {
+    try {
+      const userExists = await User.findOne({
+        where: {
+          email,
+        },
+      })
+
+      if (userExists) {
+        return response.status(409).json({ error: 'User already exists' })
+      }
+
+      const user = await User.create({
+        id: v4(),
+        name,
         email,
-      },
-    })
-
-    if (userExists) {
-      return response.status(409).json({ error: 'User already exists' })
+        password,
+        admin,
+      })
+      return response.status(201).json({
+        id: user.id,
+        name,
+        email,
+        admin,
+      })
+    } catch (err) {
+      console.error('UserController.store error:', err && err.stack ? err.stack : err)
+      return response.status(500).json({ error: 'Internal Server Error' })
     }
-
-    const user = await User.create({
-      id: v4(),
-      name,
-      email,
-      password,
-      admin,
-    })
-    return response.status(201).json({
-      id: user.id,
-      name,
-      email,
-      admin,
-    })
   }
 }
 

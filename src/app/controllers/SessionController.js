@@ -24,31 +24,36 @@ class SessionController {
 
     const { email, password } = request.body
 
-    const user = await User.findOne({
-      where: {
+    try {
+      const user = await User.findOne({
+        where: {
+          email,
+        },
+      })
+
+      if (!user) {
+        return emailOrPasswordIncorrect()
+      }
+
+      const isSamePassword = await user.checkPassword(password)
+
+      if (!isSamePassword) {
+        return emailOrPasswordIncorrect()
+      }
+
+      return response.status(201).json({
+        id: user.id,
+        name: user.name,
         email,
-      },
-    })
-
-    if (!user) {
-      return emailOrPasswordIncorrect()
+        admin: user.admin,
+        token: jwt.sign({ id: user.id, name: user.name }, authConfig.secret, {
+          expiresIn: authConfig.expiresIn,
+        }),
+      })
+    } catch (err) {
+      console.error('SessionController.store error:', err && err.stack ? err.stack : err)
+      return response.status(500).json({ error: 'Internal Server Error' })
     }
-
-    const isSamePassword = await user.checkPassword(password)
-
-    if (!isSamePassword) {
-      return emailOrPasswordIncorrect()
-    }
-
-    return response.status(201).json({
-      id: user.id,
-      name: user.name,
-      email,
-      admin: user.admin,
-      token: jwt.sign({ id: user.id, name: user.name }, authConfig.secret, {
-        expiresIn: authConfig.expiresIn,
-      }),
-    })
   }
 }
 
