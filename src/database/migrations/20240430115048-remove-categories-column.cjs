@@ -3,13 +3,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
-    await queryInterface.removeColumn('products', 'category')
+    // Remover a coluna apenas se ela existir (tornar a migration idempotente)
+    const table = await queryInterface.describeTable('products')
+    if (table && Object.prototype.hasOwnProperty.call(table, 'category')) {
+      await queryInterface.removeColumn('products', 'category')
+    }
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.addColumn('products', 'category', {
-      type: Sequelize.STRING,
-      allowNull: true,
-    })
+    // Adicionar a coluna apenas se ela não existir
+    const table = await queryInterface.describeTable('products')
+    if (!table || !Object.prototype.hasOwnProperty.call(table, 'category')) {
+      await queryInterface.addColumn('products', 'category', {
+        type: Sequelize.STRING,
+        allowNull: true,
+      })
+    }
   },
 }
