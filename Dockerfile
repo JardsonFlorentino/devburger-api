@@ -2,12 +2,17 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package and lockfiles for deterministic installs
+COPY package.json yarn.lock ./
 
-RUN npm install
+# Enable Corepack and install dependencies with Yarn
+RUN corepack enable && corepack prepare yarn@stable --activate && \
+    yarn install --frozen-lockfile --non-interactive
 
+# Copy app sources
 COPY . .
 
 EXPOSE 3001
 
-CMD npx sequelize-cli db:migrate && npm run start
+# Start server (migrations run via Fly release command)
+CMD ["yarn", "start"]

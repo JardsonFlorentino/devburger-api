@@ -1,23 +1,37 @@
-# fly.toml app configuration file generated for devburger-api on 2026-03-20T14:24:48Z
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
+# fly.toml app configuration file for devburger-api
+# Generated/merged on 2026-03-20
 
-app = 'devburger-api'
-primary_region = 'ams'
+app = "devburger-api"
+primary_region = "ams"
 
+[# Build settings — use local Dockerfile]
 [build]
+  image = "Dockerfile"
+
+[env]
+  PORT = "3001"
 
 [http_service]
-  internal_port = 8080
+  internal_port = 3001
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = "stop"
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
+  memory = "1gb"
+  cpu_kind = "shared"
   cpus = 1
   memory_mb = 256
+
+[deploy]
+# Run sequelize migrations after a release (Fly runs this before new deploys take traffic)
+release_command = "yarn sequelize-cli db:migrate"
+
+## Persistent volume for uploads. Create a volume in Fly and name it `uploads`:
+## `fly volumes create uploads --region <region> --size 1`
+## The app will mount it at /app/uploads
+[[mounts]]
+  source = "uploads"
+  destination = "/app/uploads"
