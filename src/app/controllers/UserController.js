@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
 import * as Yup from 'yup'
+import util from 'node:util'
 
 import User from '../models/User.js'
 
@@ -45,7 +46,7 @@ class UserContoller {
         admin,
       })
     } catch (err) {
-      console.error('UserController.store error:', err && err.stack ? err.stack : err)
+      console.error('UserController.store error:', util.inspect(err, { depth: null }))
       return response.status(500).json({ error: 'Internal Server Error' })
     }
   }

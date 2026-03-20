@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import util from 'node:util'
 import User from '../models/User.js'
 import jwt from 'jsonwebtoken'
 import authConfig from '../../config/auth.js'
@@ -51,7 +52,7 @@ class SessionController {
         }),
       })
     } catch (err) {
-      console.error('SessionController.store error:', err && err.stack ? err.stack : err)
+      console.error('SessionController.store error:', util.inspect(err, { depth: null }))
       return response.status(500).json({ error: 'Internal Server Error' })
     }
   }

@@ -85,7 +85,15 @@ class App {
 
     // Error handler (temporary for debugging 502 responses)
     this.app.use((err, req, res, next) => {
-      console.error('Unhandled error:', err && err.stack ? err.stack : err)
+      // print full error to logs
+      try {
+        // require util lazily to avoid top-level import changes
+        const util = require('node:util')
+        console.error('Unhandled error:', util.inspect(err, { depth: null }))
+      } catch (e) {
+        console.error('Unhandled error:', err && err.stack ? err.stack : err)
+      }
+
       if (res.headersSent) return next(err)
       res.status(500).json({ error: err && err.message ? err.message : 'Internal Server Error' })
     })
