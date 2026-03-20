@@ -82,6 +82,13 @@ class App {
 
     // Rotas
     this.routes()
+
+    // Error handler (temporary for debugging 502 responses)
+    this.app.use((err, req, res, next) => {
+      console.error('Unhandled error:', err && err.stack ? err.stack : err)
+      if (res.headersSent) return next(err)
+      res.status(500).json({ error: err && err.message ? err.message : 'Internal Server Error' })
+    })
   }
 
   routes() {
