@@ -27,15 +27,20 @@ class Database {
       Category.init(this.connection) // Antes de Product!
       Product.init(this.connection)
 
-      // 2. Sync INDIVIDUAL na ordem
-      console.log('📦 Criando Users...')
-      await User.sync({ alter: true })
+      // 2. Sync apenas em ambientes de desenvolvimento.
+      // Em produção use migrations (sequelize-cli) para manter o esquema seguro.
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('📦 Criando Users...')
+        await User.sync({ alter: true })
 
-      console.log('📦 Criando Categories...')
-      await Category.sync({ alter: true })
+        console.log('📦 Criando Categories...')
+        await Category.sync({ alter: true })
 
-      console.log('📦 Criando Products...')
-      await Product.sync({ alter: true })
+        console.log('📦 Criando Products...')
+        await Product.sync({ alter: true })
+      } else {
+        console.log('ℹ️ NODE_ENV=production — pulando `sync` e confiando em migrations')
+      }
 
       // 3. Associações
       User.associate?.(this.connection.models)
@@ -45,7 +50,9 @@ class Database {
       // 4. Order factory
       console.log('📦 Criando Orders...')
       const Order = OrderFactory(this.connection)
-      await Order.sync({ alter: true })
+      if (process.env.NODE_ENV !== 'production') {
+        await Order.sync({ alter: true })
+      }
       if (Order.associate) {
         Order.associate(this.connection.models)
       }
