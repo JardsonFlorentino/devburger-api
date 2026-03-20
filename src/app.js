@@ -26,6 +26,27 @@ class App {
       next()
     })
 
+    // FORÇAR HEADERS CORS (fallback para provedores que possam stripar headers)
+    this.app.use((req, res, next) => {
+      const requestOrigin = req.headers.origin
+
+      if (requestOrigin && (allowedOrigins.includes('*') || allowedOrigins.includes(requestOrigin))) {
+        res.header('Access-Control-Allow-Origin', requestOrigin)
+      } else if (allowedOrigins.includes('*')) {
+        res.header('Access-Control-Allow-Origin', '*')
+      }
+
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+      res.header('Access-Control-Allow-Credentials', 'true')
+
+      if (req.method === 'OPTIONS') {
+        return res.status(200).end()
+      }
+
+      next()
+    })
+
     // Configuração do CORS
     this.app.use(
       cors({
