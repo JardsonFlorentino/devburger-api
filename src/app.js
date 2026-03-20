@@ -17,6 +17,15 @@ class App {
       ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
       : ['*']
 
+    // Debug: log allowed origins at startup
+    console.log('CORS allowed origins:', allowedOrigins)
+
+    // Debug: log incoming origin for each request
+    this.app.use((req, res, next) => {
+      console.log('Incoming request origin:', req.headers.origin, 'method:', req.method, 'path:', req.path)
+      next()
+    })
+
     // Configuração do CORS
     this.app.use(
       cors({
