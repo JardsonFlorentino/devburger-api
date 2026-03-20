@@ -8,13 +8,21 @@ module.exports = {
     // Atenção: faça backup do banco ANTES de rodar esta migration em produção.
     // A migration tenta converter users.id -> UUID e atualizar orders.userId quando possível.
 
-    await sql.query(`CREATE EXTENSION IF NOT EXISTS "pgcrypto";`)
+    await sql.query(`
+      CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+    `)
 
     // 1) adicionar coluna temporária uuid
-    await sql.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS id_uuid UUID;`)
+    await sql.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS id_uuid UUID;
+    `)
 
     // 2) popular id_uuid para linhas existentes
-    await sql.query(`UPDATE users SET id_uuid = gen_random_uuid() WHERE id_uuid IS NULL;`)
+    await sql.query(`
+      UPDATE users
+      SET id_uuid = gen_random_uuid()
+      WHERE id_uuid IS NULL;
+    `)
 
     // 3) tentar atualizar referências na tabela orders (vários formatos possíveis)
     await sql.query(`DO $$
